@@ -15,31 +15,80 @@ class _CadastroState extends State<Cadastro> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController addController = TextEditingController();
-  TextEditingController sexController = TextEditingController();
-
+  
   List<Users> users = [];
 
   bool masculino = false;
   bool feminino = false;
 
-  void mostrar() {
-    String sexController;
-    if (masculino) {
-      sexController = 'Masculino';
-    } else if (feminino) {
-      sexController = 'Feminino';
-    } else {
-      sexController = '';
-    }
+  void salvar() {
+    if (_validateForm()) {
+      String sexController;
+      if (masculino) {
+        sexController = 'Masculino';
+      } else if (feminino) {
+        sexController = 'Feminino';
+      } else {
+        sexController = '';
+      }
 
-    users.add(Users(
+      users.add(Users(
         name: nameController.text,
         email: emailController.text,
-        phone: int.tryParse(phoneController.text) ?? 0,
+        phone: phoneController.text,
         address: addController.text,
-        sex: sexController));
+        sex: sexController,
+      ));
 
-    print(users[0]);
+      _clearFields();
+    }
+  }
+
+  bool _validateForm() {
+    if (nameController.text.isEmpty) {
+      _showSnackBar('Insira o nome completo');
+      return false;
+    }
+
+    if (!emailController.text.contains('@') || !emailController.text.contains('.')) {
+      _showSnackBar('Insira um email válido');
+      return false;
+    }
+
+    if (phoneController.text.isEmpty || phoneController.text.length < 11) {
+      _showSnackBar('Insira um telefone válido');
+      return false;
+    }
+
+    if (addController.text.isEmpty) {
+      _showSnackBar('Insira o endereço');
+      return false;
+    }
+
+    if (!masculino && !feminino) {
+      _showSnackBar('Selecione o sexo');
+      return false;
+    }
+
+    return true;
+  }
+
+  void _showSnackBar(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _clearFields() {
+    nameController.clear();
+    emailController.clear();
+    phoneController.text = "";  // Limpa o campo de número de telefone
+    addController.clear();
+    masculino = false;
+    feminino = false;
+    setState(() {}); // Atualiza o estado dos checkboxes
   }
 
   @override
@@ -58,7 +107,7 @@ class _CadastroState extends State<Cadastro> {
               controller: nameController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Nome',
+                labelText: 'Nome Completo',
               ),
             ),
           ),
@@ -75,18 +124,14 @@ class _CadastroState extends State<Cadastro> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: IntlPhoneField(
+              controller: phoneController,
               decoration: const InputDecoration(
                 labelText: 'Telefone',
                 border: OutlineInputBorder(
                   borderSide: BorderSide(),
                 ),
               ),
-              initialCountryCode: 'BR', // Mudado para 'BR' para Brasil
-              onChanged: (phone) {
-                setState(() {
-                  phoneController.text = phone.completeNumber;
-                });
-              },
+              initialCountryCode: 'BR',
             ),
           ),
           Padding(
@@ -131,9 +176,7 @@ class _CadastroState extends State<Cadastro> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  mostrar();
-                },
+                onPressed: salvar,
                 child: const Text('Salvar'),
               ),
               ElevatedButton(
@@ -143,7 +186,7 @@ class _CadastroState extends State<Cadastro> {
                         builder: (context) => ShowUsers(users: users)));
                   } else {
                     const snackBar = SnackBar(
-                      content: Text('Insira, pelo menos, 1 usuario'),
+                      content: Text('Insira, pelo menos, 1 usuário'),
                       backgroundColor: Colors.red,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);

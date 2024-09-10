@@ -2,7 +2,7 @@
 class Users {
   String name;
   String email;
-  int phone;
+  String phone;
   String address;
   String sex;
 
@@ -13,6 +13,8 @@ class Users {
     required this.address,
     required this.sex
   });
+
+  get age => null;
 
 }
 
