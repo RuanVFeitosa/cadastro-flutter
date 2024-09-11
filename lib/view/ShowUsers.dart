@@ -13,7 +13,7 @@ class ShowUsers extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Users'), // Use the title property
+        title: const Text('Users'),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(20.0),
@@ -22,18 +22,22 @@ class ShowUsers extends StatelessWidget {
           final user = users[index];
           IconData sexIcon;
           if (user.sex == 'Masculino') {
-            sexIcon = Icons.boy_outlined;
+            sexIcon = Icons.boy_rounded;
           } else if (user.sex == 'Feminino') {
-            sexIcon = Icons.girl;
+            sexIcon = Icons.girl_rounded;
           } else {
-            sexIcon = Icons.circle_rounded;
+            sexIcon = Icons.circle_outlined;
           }
 
           return Column(
             children: [
               Row(
                 children: [
-                  Icon(sexIcon), Text(' ${user.name}'),
+                  Icon(
+                    sexIcon,
+                    size: 50,
+                  ),
+                  Text(' ${user.name}'),
                 ],
               ),
               Row(
@@ -56,7 +60,7 @@ class ShowUsers extends StatelessWidget {
                 thickness: 2,
                 indent: 0,
                 endIndent: 0,
-                color: Colors.black,
+                color: Color.fromARGB(255, 255, 187, 0),
               ),
             ],
           );

@@ -15,7 +15,7 @@ class _CadastroState extends State<Cadastro> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController addController = TextEditingController();
-  
+
   List<Users> users = [];
 
   bool masculino = false;
@@ -50,7 +50,8 @@ class _CadastroState extends State<Cadastro> {
       return false;
     }
 
-    if (!emailController.text.contains('@') || !emailController.text.contains('.')) {
+    if (!emailController.text.contains('@') ||
+        !emailController.text.contains('.')) {
       _showSnackBar('Insira um email válido');
       return false;
     }
@@ -84,7 +85,7 @@ class _CadastroState extends State<Cadastro> {
   void _clearFields() {
     nameController.clear();
     emailController.clear();
-    phoneController.text = "";  // Limpa o campo de número de telefone
+    phoneController.text = ""; // Limpa o campo de número de telefone
     addController.clear();
     masculino = false;
     feminino = false;
@@ -176,7 +177,20 @@ class _CadastroState extends State<Cadastro> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: salvar,
+                onPressed: () {
+                  salvar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Informações salvas com sucesso!'),
+                      action: SnackBarAction(
+                        label: 'Fechar',
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        },
+                      ),
+                    ),
+                  );
+                },
                 child: const Text('Salvar'),
               ),
               ElevatedButton(
